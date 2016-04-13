@@ -46,8 +46,8 @@ def get_cli_arguments():
     # Palo Alto Networks related arguments
     dag_group = parser.add_argument_group('Dynamic Address Group')
     dag_group.add_argument('name', help="Name of Dynamic Address Group")
-    dag_group.add_argument('tags', help="Tag string (eg. \"'tag1' and 'tag2'\"")
-    dag_group.add_argument('description', help="Name of Dynamic Address Group")
+    dag_group.add_argument('match', help="Match string (eg. \"'tag1' and 'tag2'\")")
+    dag_group.add_argument('description', help="Description of the dynamic address group")
     return parser.parse_args()
 
 
