@@ -93,11 +93,9 @@ def main():
 
     # Perform a commit if requested
     if args.commit or args.commitall:
-        pano.commit()
-    if args.commitall and args.devicegroup is not None:
-        pano.commit_all(devicegroup=args.devicegroup)
-    elif args.commitall:
-        pano.commit_all()
+            pano.commit(sync=True)
+    if args.commitall:
+            pano.commit_all(sync=True, sync_all=True, devicegroup=args.devicegroup)
 
 
 # Call the main() function to begin the program if not
