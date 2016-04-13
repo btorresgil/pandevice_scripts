@@ -83,7 +83,7 @@ def main():
     else:
         scope = pano
 
-    # Create a dynamic address group in the 'cloud' devicegroup
+    # Create a dynamic address group in the required scope
     addressgroup = scope.add(objects.AddressGroup(name=args.name,
                                                   dynamic_value=args.tags,
                                                   description=args.description,
@@ -91,6 +91,7 @@ def main():
     # Push the new dynamic address group to the live Panorama device
     addressgroup.create()
 
+    # Perform a commit if requested
     if args.commit or args.commitall:
         pano.commit()
     if args.commitall and args.devicegroup is not None:
