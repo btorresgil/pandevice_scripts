@@ -85,7 +85,7 @@ def main():
 
     # Create a dynamic address group in the required scope
     addressgroup = scope.add(objects.AddressGroup(name=args.name,
-                                                  dynamic_value=args.tags,
+                                                  dynamic_value=args.match,
                                                   description=args.description,
                                                   ))
     # Push the new dynamic address group to the live Panorama device
