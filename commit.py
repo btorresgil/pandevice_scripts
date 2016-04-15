@@ -17,10 +17,10 @@
 # Author: Brian Torres-Gil <btorres-gil@paloaltonetworks.com>
 
 """
-create_dag.py
-=============
+commit.py
+=========
 
-Create a dynamic address group on Panorama
+Initiate a commit on a Palo Alto Networks Panorama
 
 """
 
@@ -30,23 +30,16 @@ import logging
 import argparse
 
 from pandevice import panorama
-from pandevice import objects
 
 from credentials import *
 
 
 def get_cli_arguments():
     # Get command line arguments
-    parser = argparse.ArgumentParser(description="Add dynamic address group to a Palo Alto Networks Panorama")
+    parser = argparse.ArgumentParser(description="Initiate commit on a Palo Alto Networks Panorama")
     parser.add_argument('-v', '--verbose', action='count', help="Verbose (-vv for extra verbose)")
-    parser.add_argument('-d', '--devicegroup', help="Configure in device-group  (omit for 'shared')")
-    parser.add_argument('-c', '--commit', action='store_true', help="Perform Panorama commit after configuration change")
-    parser.add_argument('-a', '--commitall', action='store_true', help="Commit change to firewalls (implies -c)")
-    # Palo Alto Networks related arguments
-    dag_group = parser.add_argument_group('Dynamic Address Group')
-    dag_group.add_argument('name', help="Name of Dynamic Address Group")
-    dag_group.add_argument('match', help="Match string (eg. \"'tag1' and 'tag2'\")")
-    dag_group.add_argument('description', help="Description of the dynamic address group")
+    parser.add_argument('-d', '--devicegroup', help="Commit device-group")
+    parser.add_argument('-a', '--commitall', action='store_true', help="Commit change to firewalls")
     return parser.parse_args()
 
 
@@ -76,23 +69,8 @@ def main():
                              api_key=APIKEY,
                              )
 
-    # Add the devicegroup as a child of the Panorama
-    if args.devicegroup is not None:
-        scope = pano.add(panorama.DeviceGroup(args.devicegroup))
-    else:
-        scope = pano
-
-    # Create a dynamic address group in the required scope
-    addressgroup = scope.add(objects.AddressGroup(name=args.name,
-                                                  dynamic_value=args.match,
-                                                  description=args.description,
-                                                  ))
-    # Push the new dynamic address group to the live Panorama device
-    addressgroup.create()
-
     # Perform a commit if requested
-    if args.commit or args.commitall:
-        pano.commit(sync=True)
+    pano.commit(sync=True)
     if args.commitall:
         pano.commit_all(sync=True, sync_all=True, devicegroup=args.devicegroup)
 
