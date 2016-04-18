@@ -42,9 +42,9 @@ def get_cli_arguments():
     parser.add_argument('-d', '--devicegroup', help="Configure in device-group  (omit for 'shared')")
     parser.add_argument('-a', '--above', help="Name of a rule to put this rule above")
     # Palo Alto Networks related arguments
-    rule_group = parser.add_argument_group('Dynamic Address Group')
+    rule_group = parser.add_argument_group('Security rule parameters')
     rule_group.add_argument('-n', '--name', required=True, help="Name of Rule")
-    #rule_group.add_argument('-t', '--tags', help="Administrative tags")
+    rule_group.add_argument('-t', '--tag', help="Administrative tag")
     rule_group.add_argument('--szone', help="Source Zone")
     rule_group.add_argument('--saddr', help="Source Addresses")
     rule_group.add_argument('--dzone', help="Destination Zone")
@@ -52,6 +52,7 @@ def get_cli_arguments():
     rule_group.add_argument('--application', help="Application ID")
     rule_group.add_argument('--action', default="allow", help="Action (allow, deny) Default: allow")
     rule_group.add_argument('--log', help="Log Forwarding Profile Name")
+    rule_group.add_argument('--description', help="Rule description")
     rule_group.add_argument('--group', help="Profile Group Name")
     rule_group.add_argument('--virus', help="Antivirus Profile Name")
     rule_group.add_argument('--spyware', help="Anti-Spyware Profile Name")
@@ -111,14 +112,14 @@ def main():
                                               file_blocking=args.file,
                                               wildfire_analysis=args.wildfire,
                                               data_filtering=args.data,
-                                              #tags=args.tags,
+                                              tag=args.tag,
                                               description=args.description,
                                               ))
     # Push the new security rule to the live Panorama device
     rule.create()
 
     if args.above is not None:
-        pano.xapi.move(rule.xpath(), "above", args.above)
+        pano.xapi.move(rule.xpath(), "before", args.above)
 
 
 # Call the main() function to begin the program if not

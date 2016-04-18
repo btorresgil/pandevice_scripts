@@ -40,6 +40,7 @@ def get_cli_arguments():
     parser = argparse.ArgumentParser(description="Add dynamic address group to a Palo Alto Networks Panorama")
     parser.add_argument('-v', '--verbose', action='count', help="Verbose (-vv for extra verbose)")
     parser.add_argument('-d', '--devicegroup', help="Configure in device-group  (omit for 'shared')")
+    parser.add_argument('-t', '--tag', help="Administrative tag")
     parser.add_argument('-c', '--commit', action='store_true', help="Perform Panorama commit after configuration change")
     parser.add_argument('-a', '--commitall', action='store_true', help="Commit change to firewalls (implies -c)")
     # Palo Alto Networks related arguments
@@ -86,6 +87,7 @@ def main():
     addressgroup = scope.add(objects.AddressGroup(name=args.name,
                                                   dynamic_value=args.match,
                                                   description=args.description,
+                                                  tag=args.tag,
                                                   ))
     # Push the new dynamic address group to the live Panorama device
     addressgroup.create()
